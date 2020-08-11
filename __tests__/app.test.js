@@ -1,23 +1,20 @@
-const { MongoMemoryServer } = require('mongodb-memory-server');
-const mongod = new MongoMemoryServer();
-const mongoose = require('mongoose');
-const connect = require('../lib/utils/connect');
-
+require('dotenv').config();
 const request = require('supertest');
 const app = require('../lib/app');
+const { prepare } = require('../data-helpers/prepare');
+const Movie = require('../lib/models/Movie');
 
-describe('terrible-movies-be routes', () => {
-  beforeAll(async() => {
-    const uri = await mongod.getUri();
-    return connect(uri);
-  });
 
-  beforeEach(() => {
-    return mongoose.connection.dropDatabase();
-  });
+describe('movies routes', () => {
 
-  afterAll(async() => {
-    await mongoose.connection.close();
-    return mongod.stop();
+  it('GETs all movies', async() => {
+    const movies = prepare(await Movie.find());
+
+    return request(app)
+      .get('/api/v1/movies')
+      .then(res => {
+        expect(res.body).toEqual(movies);
+      });
   });
+  
 });

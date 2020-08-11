@@ -6,8 +6,6 @@ const mongoose = require('mongoose');
 const connect = require('../lib/utils/connect');
 const seed = require('./seed');
 
-
-
 beforeAll(async() => { 
   const uri = await mongod.getUri();
   return connect(uri);
