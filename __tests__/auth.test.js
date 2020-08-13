@@ -40,4 +40,27 @@ describe('auth routes', () => {
       });
   });
 
+  it('logs in user with email and password', async() => {
+    await User.create({
+      email: 'marcel@shell.com',
+      password: 'password',
+      avatar: 'https://i.pinimg.com/236x/8f/e4/4a/8fe44a894841cf7f563c67594d99f25e--marcel-the-shell-things-i-love.jpg'
+    });
+
+    return request(app)
+      .post('/api/v1/auth/login')
+      .send({
+        email: 'marcel@shell.com',
+        password: 'password'
+
+      })
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          email: 'marcel@shell.com',
+          avatar: 'https://i.pinimg.com/236x/8f/e4/4a/8fe44a894841cf7f563c67594d99f25e--marcel-the-shell-things-i-love.jpg'
+        });
+      });
+  });
+
 });
